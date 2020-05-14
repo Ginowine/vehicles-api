@@ -38,18 +38,21 @@ public class CarService {
      * @param id the ID number of the car to gather information on
      * @return the requested car's information, including location and price
      */
-    public Optional<Car> findById(Long id) {
+    public Car findById(Long id) {
         /**
          * TODO: Find the car by ID from the `repository` if it exists.
          *   If it does not exist, throw a CarNotFoundException
          *   Remove the below code as part of your implementation.
          */
+        Car car;
         //Car car = new Car();
-        Optional<Optional<Car>> optionalCar = Optional.ofNullable(repository.findById(id));
-        Optional<Car> car = optionalCar.orElseThrow(CarNotFoundException::new);
-
-
-        //return optionalCar.orElseThrow(CarNotFoundException::new);
+        Optional<Car> optionalCar = repository.findById(id);
+        if (optionalCar.isPresent()){
+            car = optionalCar.get();
+            return car;
+        }else {
+            throw new CarNotFoundException("InvalidCarId", id);
+        }
 
         /**
          * TODO: Use the Pricing Web client you create in `VehiclesApiApplication`
@@ -68,9 +71,6 @@ public class CarService {
          * Note: The Location class file also uses @transient for the address,
          * meaning the Maps service needs to be called each time for the address.
          */
-
-
-        return car;
     }
 
     /**
