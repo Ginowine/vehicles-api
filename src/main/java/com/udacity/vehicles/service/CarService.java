@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -75,6 +76,17 @@ public class CarService {
                 .uri("/price/{id}", id).accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(Price.class));
+
+        Flux<Price> carPrices = webClientPrice.get()
+                .uri("/price/{id}", id).accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToFlux(Price.class);
+
+        Price price = new Price();
+        String carPrice1 = price.getPrice().toString();
+        Car car1 = new Car();
+        car1.setPrice(carPrice1);
+
 
 
         /**
