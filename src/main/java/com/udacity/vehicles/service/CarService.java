@@ -1,10 +1,13 @@
 package com.udacity.vehicles.service;
 
+import com.udacity.vehicles.client.prices.Price;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +49,7 @@ public class CarService {
      * @return the requested car's information, including location and price
      */
     public Car findById(Long id) {
+        Car car;
         /**
          * TODO: Find the car by ID from the `repository` if it exists.
          *   If it does not exist, throw a CarNotFoundException
@@ -54,8 +58,7 @@ public class CarService {
         //Car car = new Car();
         Optional<Car> optionalCar = repository.findById(id);
         if (optionalCar.isPresent()){
-            Car car = optionalCar.get();
-            return car;
+            car = optionalCar.get();
         }else {
             throw new CarNotFoundException();
         }
@@ -68,6 +71,11 @@ public class CarService {
          *   the pricing service each time to get the price.
          */
 
+        Mono<Price> carPrice = webClientPrice.get()
+                .uri("/price/{id}", id).accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .flatMap(clientResponse -> clientResponse.bodyToMono(Price.class));
+
 
         /**
          * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
@@ -77,6 +85,8 @@ public class CarService {
          * Note: The Location class file also uses @transient for the address,
          * meaning the Maps service needs to be called each time for the address.
          */
+
+        return car;
     }
 
     /**
