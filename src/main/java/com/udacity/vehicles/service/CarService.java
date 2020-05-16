@@ -2,7 +2,9 @@ package com.udacity.vehicles.service;
 
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,13 +18,18 @@ import java.util.Optional;
 public class CarService {
 
     private final CarRepository repository;
+    private WebClient webClientMaps;
+    private WebClient webClientPrice;
 
-    public CarService(CarRepository repository) {
+
+    public CarService(CarRepository repository, @Qualifier("maps") WebClient webClientMaps, @Qualifier("pricing") WebClient webClientPricing) {
         /**
          * TODO: Add the Maps and Pricing Web Clients you create
          *   in `VehiclesApiApplication` as arguments and set them here.
          */
         this.repository = repository;
+        this.webClientMaps = webClientMaps;
+        this.webClientPrice = webClientPricing;
     }
 
     /**
@@ -44,14 +51,13 @@ public class CarService {
          *   If it does not exist, throw a CarNotFoundException
          *   Remove the below code as part of your implementation.
          */
-        Car car;
         //Car car = new Car();
         Optional<Car> optionalCar = repository.findById(id);
         if (optionalCar.isPresent()){
-            car = optionalCar.get();
+            Car car = optionalCar.get();
             return car;
         }else {
-            throw new CarNotFoundException("InvalidCarId", id);
+            throw new CarNotFoundException();
         }
 
         /**
