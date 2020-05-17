@@ -1,5 +1,6 @@
 package com.udacity.vehicles.service;
 
+import com.udacity.vehicles.client.maps.Address;
 import com.udacity.vehicles.client.prices.Price;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
@@ -78,7 +79,6 @@ public class CarService {
 
         String actualPrice = price.getPrice().toString();
         car.setPrice(actualPrice);
-
         /**
          * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
          *   to get the address for the vehicle. You should access the location
@@ -87,6 +87,15 @@ public class CarService {
          * Note: The Location class file also uses @transient for the address,
          * meaning the Maps service needs to be called each time for the address.
          */
+
+        Mono<Address> vehicleAddress = webClientMaps.get()
+                .uri("/address/")
+                .retrieve()
+                .bodyToMono(Address.class);
+
+        Address addressOfVehicle = vehicleAddress.block();
+
+
 
         return car;
     }
