@@ -29,6 +29,7 @@ public class CarService {
     private WebClient webClientPrice;
 
     private MapsClient mapsClient;
+    private Car car;
 
 
     public CarService(CarRepository repository, @Qualifier("maps") WebClient webClientMaps, @Qualifier("pricing") WebClient webClientPricing) {
@@ -55,7 +56,6 @@ public class CarService {
      * @return the requested car's information, including location and price
      */
     public Car findById(Long id) {
-        Car car;
         /**
          * TODO: Find the car by ID from the `repository` if it exists.
          *   If it does not exist, throw a CarNotFoundException
@@ -63,7 +63,7 @@ public class CarService {
          */
         Optional<Car> optionalCar = repository.findById(id);
         if (optionalCar.isPresent()){
-            car = optionalCar.get();
+           Car car = optionalCar.get();
         }else {
             throw new CarNotFoundException();
         }
@@ -110,8 +110,6 @@ public class CarService {
         location2.setState(location.getState());
         location2.setZip(location.getZip());
 
-
-
         return car;
     }
     /**
@@ -141,11 +139,16 @@ public class CarService {
          * TODO: Find the car by ID from the `repository` if it exists.
          *   If it does not exist, throw a CarNotFoundException
          */
-
-
+        Optional<Car> optionalCar = repository.findById(id);
+        if (optionalCar.isPresent()){
+            car = optionalCar.get();
+        }else {
+            throw new CarNotFoundException();
+        }
         /**
          * TODO: Delete the car from the repository.
          */
+        repository.deleteById(car.getId());
 
 
     }
