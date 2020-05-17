@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -56,7 +55,6 @@ public class CarService {
          *   If it does not exist, throw a CarNotFoundException
          *   Remove the below code as part of your implementation.
          */
-        //Car car = new Car();
         Optional<Car> optionalCar = repository.findById(id);
         if (optionalCar.isPresent()){
             car = optionalCar.get();
@@ -71,23 +69,15 @@ public class CarService {
          * Note: The car class file uses @transient, meaning you will need to call
          *   the pricing service each time to get the price.
          */
-
-        Mono<Price> carPrice = webClientPrice.get()
-                .uri("/price/{id}", id).accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .flatMap(clientResponse -> clientResponse.bodyToMono(Price.class));
-
-        Flux<Price> carPrices = webClientPrice.get()
+        Mono<Price> priceOfCar = webClientPrice.get()
                 .uri("/price/{id}", id).accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToFlux(Price.class);
+                .bodyToMono(Price.class);
 
-        Price price = new Price();
-        String carPrice1 = price.getPrice().toString();
-        Car car1 = new Car();
-        car1.setPrice(carPrice1);
+        Price price = priceOfCar.block();
 
-
+        String actualPrice = price.getPrice().toString();
+        car.setPrice(actualPrice);
 
         /**
          * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
@@ -100,7 +90,6 @@ public class CarService {
 
         return car;
     }
-
     /**
      * Either creates or updates a vehicle, based on prior existence of car
      * @param car A car object, which can be either new or existing
