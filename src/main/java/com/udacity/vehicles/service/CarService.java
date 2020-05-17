@@ -104,6 +104,12 @@ public class CarService {
         Location location = car.getLocation();
         Location location1 = mapsClient.getAddress(location);
 
+        Location location2 = new Location(location1.getLat(), location1.getLon());
+        location2.setAddress(location.getAddress());
+        location2.setCity(location.getCity());
+        location2.setState(location.getState());
+        location2.setZip(location.getZip());
+
 
 
         return car;
