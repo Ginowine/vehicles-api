@@ -63,10 +63,14 @@ public class CarService {
          */
         Optional<Car> optionalCar = repository.findById(id);
         if (optionalCar.isPresent()){
-           Car car = optionalCar.get();
+           car = optionalCar.get();
         }else {
             throw new CarNotFoundException();
         }
+
+//        Optional<Optional<Car>> optionalCar = Optional.ofNullable(repository.findById(id));
+//        Optional<Car> car = optionalCar.orElseThrow(CarNotFoundException::new);
+
 
         /**
          * TODO: Use the Pricing Web client you create in `VehiclesApiApplication`
