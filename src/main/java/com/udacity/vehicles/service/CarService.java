@@ -1,13 +1,16 @@
 package com.udacity.vehicles.service;
 
 import com.udacity.vehicles.client.maps.Address;
+import com.udacity.vehicles.client.maps.MapsClient;
 import com.udacity.vehicles.client.prices.Price;
+import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -24,6 +27,8 @@ public class CarService {
     private final CarRepository repository;
     private WebClient webClientMaps;
     private WebClient webClientPrice;
+
+    private MapsClient mapsClient;
 
 
     public CarService(CarRepository repository, @Qualifier("maps") WebClient webClientMaps, @Qualifier("pricing") WebClient webClientPricing) {
@@ -88,12 +93,16 @@ public class CarService {
          * meaning the Maps service needs to be called each time for the address.
          */
 
-        Mono<Address> vehicleAddress = webClientMaps.get()
+        Flux<Address> vehicleAddress = webClientMaps.get()
                 .uri("/address/")
                 .retrieve()
-                .bodyToMono(Address.class);
+                .bodyToFlux(Address.class);
 
-        Address addressOfVehicle = vehicleAddress.block();
+        Address addressOfVehicles = vehicleAddress.blockFirst();
+        String actualAddress = addressOfVehicles.getAddress();
+
+        Location location = car.getLocation();
+        Location location1 = mapsClient.getAddress(location);
 
 
 
