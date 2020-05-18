@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -98,7 +99,11 @@ class CarController {
          *   Update the first line as part of the above implementing.
          */
 
-        Car car1 = carService.findById(id);
+        Optional<Car> optionalCar = Optional.ofNullable(carService.findById(id));
+
+        if (!optionalCar.isPresent()){
+            return ResponseEntity.notFound().build();
+        }
         car.setId(id);
         carService.save(car);
         Resource<Car> resource = assembler.toResource(car);
