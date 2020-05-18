@@ -14,7 +14,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Implements the car service create, read, update or delete
@@ -145,12 +144,14 @@ public class CarService {
          * TODO: Find the car by ID from the `repository` if it exists.
          *   If it does not exist, throw a CarNotFoundException
          */
-        Optional<Car> optionalCar = repository.findById(id);
-        if (optionalCar.isPresent()){
-            car = optionalCar.get();
-        }else {
-            throw new CarNotFoundException();
-        }
+//        Optional<Car> optionalCar = repository.findById(id);
+//        if (optionalCar.isPresent()){
+//            car = optionalCar.get();
+//        }else {
+//            throw new CarNotFoundException();
+//        }
+
+        car = repository.findById(id).orElseThrow(() -> new CarNotFoundException());
         /**
          * TODO: Delete the car from the repository.
          */

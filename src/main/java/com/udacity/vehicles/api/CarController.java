@@ -7,8 +7,6 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.CoreSubscriber;
-import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -52,22 +50,15 @@ class CarController {
      * @return all information for the requested vehicle
      */
     @GetMapping("/{id}")
-    Mono<Car> get(@PathVariable Long id) {
+    Resource<Car> get(@PathVariable Long id) {
         /**
          * TODO: Use the `findById` method from the Car Service to get car information.
          * TODO: Use the `assembler` on that car and return the resulting output.
          *   Update the first line as part of the above implementing.
          */
         Car car = carService.findById(id);
-        return new Mono<Car>() {
-            @Override
-            public void subscribe(CoreSubscriber<? super Car> coreSubscriber) {
-                linkTo(methodOn(CarController.class).get(id)).withSelfRel();
-            }
-        };
+        return assembler.toResource(car);
 
-//        return new Resource<Car>(car, linkTo(methodOn(CarController.class).get(id)).withSelfRel());
-//        //return assembler.toResource(new Car());
     }
 
     /**
