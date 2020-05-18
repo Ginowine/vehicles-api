@@ -57,8 +57,11 @@ class CarController {
          *   Update the first line as part of the above implementing.
          */
         Car car = carService.findById(id);
-        return assembler.toResource(car);
 
+//        return new Resource<>(car,
+//                linkTo(methodOn(CarController.class).get(car.getId())).withSelfRel());
+
+        return assembler.toResource(car);
     }
 
     /**
@@ -74,7 +77,9 @@ class CarController {
          * TODO: Use the `assembler` on that saved car and return as part of the response.
          *   Update the first line as part of the above implementing.
          */
-        Resource<Car> resource = assembler.toResource(new Car());
+
+        Car car1 = carService.save(car);
+        Resource<Car> resource = assembler.toResource(car1);
         return ResponseEntity.created(new URI(resource.getId().expand().getHref())).body(resource);
     }
 
