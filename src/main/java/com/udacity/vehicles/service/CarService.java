@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -86,7 +85,6 @@ public class CarService {
                 .bodyToMono(Price.class);
 
         Price price = priceOfCar.block();
-
         String actualPrice = price.getPrice().toString();
         car.setPrice(actualPrice);
         /**
@@ -98,12 +96,12 @@ public class CarService {
          * meaning the Maps service needs to be called each time for the address.
          */
 
-        Flux<Address> vehicleAddress = webClientMaps.get()
+        Mono<Address> vehicleAddress = webClientMaps.get()
                 .uri("/address/")
                 .retrieve()
-                .bodyToFlux(Address.class);
+                .bodyToMono(Address.class);
 
-        Address addressOfVehicles = vehicleAddress.blockFirst();
+        Address addressOfVehicles = vehicleAddress.block();
         String actualAddress = addressOfVehicles.getAddress();
 
         Location location = car.getLocation();
