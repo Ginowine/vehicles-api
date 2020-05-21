@@ -98,7 +98,7 @@ public class CarControllerTest {
          *   below (the vehicle will be the first in the list).
          */
         Car car = getCar();
-        mvc.perform(get("/cars"))
+        mvc.perform(get("/car"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json("[]"));
@@ -118,7 +118,7 @@ public class CarControllerTest {
          *   a vehicle by ID. This should utilize the car from `getCar()` below.
          */
 
-        mvc.perform(get("/cars/1"))
+        mvc.perform(get("/car/1"))
                 .andExpect(status().isOk());
 
         verify(carService, times(1)).findById((long) 1);

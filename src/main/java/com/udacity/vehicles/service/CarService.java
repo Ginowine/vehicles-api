@@ -150,7 +150,8 @@ public class CarService {
         /**
          * TODO: Delete the car from the repository.
          */
-        repository.deleteById(car.getId());
+        repository.delete(car);
+        //repository.deleteById(car.getId());
 
 
     }
