@@ -3,11 +3,11 @@ package com.udacity.vehicles.service;
 import com.udacity.vehicles.client.maps.Address;
 import com.udacity.vehicles.client.maps.MapsClient;
 import com.udacity.vehicles.client.prices.Price;
+import com.udacity.vehicles.client.prices.PriceClient;
 import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -79,14 +79,22 @@ public class CarService {
          * Note: The car class file uses @transient, meaning you will need to call
          *   the pricing service each time to get the price.
          */
-        Mono<Price> priceOfCar = webClientPrice.get()
-                .uri("/price/{id}", id).accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(Price.class);
 
-        Price price = priceOfCar.block();
+        PriceClient priceClient = new PriceClient(webClientPrice);
+        priceClient.getPrice(id);
+
+        Price price = new Price();
         String actualPrice = price.getPrice().toString();
         car.setPrice(actualPrice);
+
+//        Mono<Price> priceOfCar = webClientPrice.get()
+//                .uri("/price/{id}", id).accept(MediaType.APPLICATION_JSON)
+//                .retrieve()
+//                .bodyToMono(Price.class);
+//
+//        Price price = priceOfCar.block();
+//        String actualPrice = price.getPrice().toString();
+//        car.setPrice(actualPrice);
         /**
          * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
          *   to get the address for the vehicle. You should access the location
