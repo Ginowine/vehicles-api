@@ -28,7 +28,8 @@ public class CarService {
 
     private MapsClient mapsClient;
     private Car car;
-    private final ModelMapper mapper;
+
+    private ModelMapper mapper;
 
 
     public CarService(CarRepository repository, @Qualifier("maps") WebClient webClientMaps, @Qualifier("pricing") WebClient webClientPricing) {
@@ -88,14 +89,6 @@ public class CarService {
         String actualPrice = price.getPrice().toString();
         car.setPrice(actualPrice);
 
-//        Mono<Price> priceOfCar = webClientPrice.get()
-//                .uri("/price/{id}", id).accept(MediaType.APPLICATION_JSON)
-//                .retrieve()
-//                .bodyToMono(Price.class);
-//
-//        Price price = priceOfCar.block();
-//        String actualPrice = price.getPrice().toString();
-//        car.setPrice(actualPrice);
         /**
          * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
          *   to get the address for the vehicle. You should access the location
@@ -104,11 +97,6 @@ public class CarService {
          * Note: The Location class file also uses @transient for the address,
          * meaning the Maps service needs to be called each time for the address.
          */
-
-//        Mono<Address> vehicleAddress = webClientMaps.get()
-//                .uri("/address/")
-//                .retrieve()
-//                .bodyToMono(Address.class);
 
         MapsClient mapsClient = new MapsClient(webClientMaps, mapper);
         Location location = car.getLocation();
@@ -120,23 +108,7 @@ public class CarService {
         location1.setAddress(address.getAddress());
         location1.setZip(address.getZip());
         location1.setState(address.getState());
-        location1.setCity(address.setCity(););
-
-
-
-
-
-        Address addressOfVehicles = vehicleAddress.block();
-        String actualAddress = addressOfVehicles.getAddress();
-
-        Location location = car.getLocation();
-        Location location1 = mapsClient.getAddress(location);
-
-        Location location2 = new Location(location1.getLat(), location1.getLon());
-        location2.setAddress(location.getAddress());
-        location2.setCity(location.getCity());
-        location2.setState(location.getState());
-        location2.setZip(location.getZip());
+        location1.setCity(address.getCity());
 
         return car;
     }
