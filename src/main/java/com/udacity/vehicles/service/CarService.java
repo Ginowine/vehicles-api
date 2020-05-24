@@ -64,7 +64,7 @@ public class CarService {
          */
         Optional<Car> optionalCar = repository.findById(id);
         if (optionalCar.isPresent()){
-           Car car = optionalCar.get();
+           car = optionalCar.get();
         }else {
             throw new CarNotFoundException();
         }
@@ -84,8 +84,7 @@ public class CarService {
          */
 
         PriceClient priceClient = new PriceClient(webClientPrice);
-        Price price = priceClient
-        Price price = priceClient.getPrice(id);
+        priceClient.getPrice(id);
 
         Price price = new Price();
         String actualPrice = price.getPrice().toString();
