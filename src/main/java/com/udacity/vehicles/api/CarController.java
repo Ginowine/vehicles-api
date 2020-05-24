@@ -12,7 +12,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -91,7 +90,7 @@ class CarController {
      * @param car The updated information about the related vehicle.
      * @return response that the vehicle was updated in the system
      */
-    @PutMapping("/{id}")
+    @PutMapping("/car/{id}")
     ResponseEntity<?> put(@PathVariable Long id, @Valid @RequestBody Car car) {
         /**
          * TODO: Set the id of the input car object to the `id` input.
@@ -100,12 +99,9 @@ class CarController {
          *   Update the first line as part of the above implementing.
          */
 
-        Optional<Car> optionalCar = Optional.ofNullable(carService.findById(id));
-
-        if (!optionalCar.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
-        car.setId(id);
+        //Optional<Car> optionalCar = Optional.ofNullable(carService.findById(id));
+        Car car1 = carService.findById(id);
+        car.setId(car1.getId());
         carService.save(car);
         Resource<Car> resource = assembler.toResource(car);
         return ResponseEntity.ok(resource);
@@ -116,7 +112,7 @@ class CarController {
      * @param id The ID number of the vehicle to remove.
      * @return response that the related vehicle is no longer in the system
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("car/{id}")
     ResponseEntity<?> delete(@PathVariable Long id) {
         /**
          * TODO: Use the Car Service to delete the requested vehicle.

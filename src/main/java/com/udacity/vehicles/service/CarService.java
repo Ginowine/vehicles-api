@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Implements the car service create, read, update or delete
@@ -61,14 +62,14 @@ public class CarService {
          *   If it does not exist, throw a CarNotFoundException
          *   Remove the below code as part of your implementation.
          */
-//        Optional<Car> optionalCar = repository.findById(id);
-//        if (optionalCar.isPresent()){
-//           car = optionalCar.get();
-//        }else {
-//            throw new CarNotFoundException();
-//        }
+        Optional<Car> optionalCar = repository.findById(id);
+        if (optionalCar.isPresent()){
+           Car car = optionalCar.get();
+        }else {
+            throw new CarNotFoundException();
+        }
 
-        car = repository.findById(id).orElseThrow(() -> new CarNotFoundException());
+//        Car car = repository.findById(id).orElseThrow(() -> new CarNotFoundException());
 
 //        Optional<Optional<Car>> optionalCar = Optional.ofNullable(repository.findById(id));
 //        Optional<Car> car = optionalCar.orElseThrow(CarNotFoundException::new);
@@ -83,7 +84,8 @@ public class CarService {
          */
 
         PriceClient priceClient = new PriceClient(webClientPrice);
-        priceClient.getPrice(id);
+        Price price = priceClient
+        Price price = priceClient.getPrice(id);
 
         Price price = new Price();
         String actualPrice = price.getPrice().toString();
