@@ -21,18 +21,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.net.URI;
 import java.util.Collections;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Implements testing of the CarController class.
@@ -98,12 +96,12 @@ public class CarControllerTest {
          *   below (the vehicle will be the first in the list).
          */
         Car car = getCar();
-        mvc.perform(get("/car"))
+        mvc.perform(get("/cars"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json("[]"));
+                 .andExpect((ResultMatcher) jsonPath("car", is(car)));
 
-        verify(carService, times(1)).list();
+        //verify(carService, times(1)).list();
 
     }
 
@@ -118,10 +116,15 @@ public class CarControllerTest {
          *   a vehicle by ID. This should utilize the car from `getCar()` below.
          */
 
-        mvc.perform(get("/car/1"))
-                .andExpect(status().isOk());
+        final Long id = 1l;
+        Car car = getCar();
+        given(carService.findById(any())).willReturn(car);
 
-        verify(carService, times(1)).findById((long) 1);
+        mvc.perform(get("/car/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.details", is(car.getDetails())));
+
+        //verify(carService, times(1)).findById((long) 1);
     }
 
     /**
@@ -135,6 +138,10 @@ public class CarControllerTest {
          *   when the `delete` method is called from the Car Controller. This
          *   should utilize the car from `getCar()` below.
          */
+        Car car = getCar();
+        mvc.perform(delete("cars", car))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("car", car));
     }
 
     /**
