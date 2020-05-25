@@ -99,7 +99,6 @@ public class CarControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json("[]"));
-                 //.andExpect((ResultMatcher) jsonPath("car", is(car)));
 
         //verify(carService, times(1)).list();
 
@@ -115,11 +114,7 @@ public class CarControllerTest {
          * TODO: Add a test to check that the `get` method works by calling
          *   a vehicle by ID. This should utilize the car from `getCar()` below.
          */
-
-        Car car = getCar();
-        given(carService.findById(any())).willReturn(car);
-
-        mvc.perform(get("/car/{id}", 1))
+        mvc.perform(get("/cars/1"))
                 .andExpect(status().isOk());
                // .andExpect((ResultMatcher) jsonPath("$.details", is(car.getDetails())));
 
