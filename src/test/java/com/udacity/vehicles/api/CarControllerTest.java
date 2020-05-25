@@ -116,11 +116,10 @@ public class CarControllerTest {
          *   a vehicle by ID. This should utilize the car from `getCar()` below.
          */
 
-        final Long id = 1l;
         Car car = getCar();
         given(carService.findById(any())).willReturn(car);
 
-        mvc.perform(get("/car/{id}", id))
+        mvc.perform(get("/car/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect((ResultMatcher) jsonPath("$.details", is(car.getDetails())));
 
