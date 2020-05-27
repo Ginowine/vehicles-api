@@ -112,7 +112,7 @@ class CarController {
      * @param id The ID number of the vehicle to remove.
      * @return response that the related vehicle is no longer in the system
      */
-    @DeleteMapping("car/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<?> delete(@PathVariable Long id) {
         /**
          * TODO: Use the Car Service to delete the requested vehicle.
