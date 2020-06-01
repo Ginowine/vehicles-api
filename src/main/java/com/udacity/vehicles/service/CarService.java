@@ -32,7 +32,6 @@ public class CarService {
 
     private ModelMapper mapper;
 
-
     public CarService(CarRepository repository, @Qualifier("maps") WebClient webClientMaps, @Qualifier("pricing") WebClient webClientPricing) {
         /**
          * TODO: Add the Maps and Pricing Web Clients you create
