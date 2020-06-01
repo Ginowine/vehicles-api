@@ -140,7 +140,7 @@ public class CarControllerTest {
         Car car = getCar();
         mvc.perform(delete("/cars/{id}", "1"))
                 .andExpect(status().isOk());
-                //.andExpect((ResultMatcher) jsonPath("car", car));
+                //.andExpect((ResultMatcher) jsonPath("car", car))
     }
 
     /**
