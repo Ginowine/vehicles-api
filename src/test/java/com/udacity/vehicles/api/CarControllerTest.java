@@ -20,7 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.net.URI;
@@ -31,7 +30,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Implements testing of the CarController class.
@@ -138,9 +138,9 @@ public class CarControllerTest {
          *   should utilize the car from `getCar()` below.
          */
         Car car = getCar();
-        mvc.perform(delete("cars", car))
-                .andExpect(status().isOk())
-                .andExpect((ResultMatcher) jsonPath("car", car));
+        mvc.perform(delete("/cars/{id}", "1"))
+                .andExpect(status().isOk());
+                //.andExpect((ResultMatcher) jsonPath("car", car));
     }
 
     /**
