@@ -1,6 +1,5 @@
 package com.udacity.vehicles.service;
 
-import com.udacity.vehicles.client.maps.Address;
 import com.udacity.vehicles.client.maps.MapsClient;
 import com.udacity.vehicles.client.prices.PriceClient;
 import com.udacity.vehicles.domain.Location;
@@ -109,15 +108,22 @@ public class CarService {
 
         MapsClient mapsClient = new MapsClient(webClientMaps, mapper);
         Location location = car.getLocation();
-        mapsClient.getAddress(location);
+        //mapsClient.getAddress(location);
 
-        Address address = new Address();
+        Location returnedLocation = mapsClient.getAddress(location);
 
-        Location location1 = new Location(location.getLat(), location.getLon());
-        location1.setAddress(address.getAddress());
-        location1.setZip(address.getZip());
-        location1.setState(address.getState());
-        location1.setCity(address.getCity());
+        Location locationObject = new Location(returnedLocation.getLat(), returnedLocation.getLon());
+        locationObject.setCity(returnedLocation.getCity());
+        locationObject.setState(returnedLocation.getState());
+        locationObject.setZip(returnedLocation.getZip());
+        locationObject.setAddress(returnedLocation.getAddress());
+
+//        Address address = new Address();
+//        Location location1 = new Location(location.getLat(), location.getLon());
+//        location1.setAddress(address.getAddress());
+//        location1.setZip(address.getZip());
+//        location1.setState(address.getState());
+//        location1.setCity(address.getCity());
 
         return car;
     }
