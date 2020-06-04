@@ -2,7 +2,6 @@ package com.udacity.vehicles.service;
 
 import com.udacity.vehicles.client.maps.Address;
 import com.udacity.vehicles.client.maps.MapsClient;
-import com.udacity.vehicles.client.prices.Price;
 import com.udacity.vehicles.client.prices.PriceClient;
 import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
@@ -14,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 /**
  * Implements the car service create, read, update or delete
@@ -83,11 +83,20 @@ public class CarService {
          */
 
         PriceClient priceClient = new PriceClient(webClientPrice);
-        priceClient.getPrice(id);
+        //priceClient.getPrice(id);
 
-        Price price = new Price();
-        String actualPrice = price.getPrice().toString();
-        car.setPrice(actualPrice);
+        String formatedPriceData = priceClient.getPrice(id);
+
+        Scanner scanner = new Scanner(formatedPriceData);
+        String currency = scanner.next();
+        String price = scanner.nextBigDecimal().toString();
+
+        car.setPrice(price);
+
+
+//        Price price = new Price();
+//        String actualPrice = price.getPrice().toString();
+//        car.setPrice(actualPrice);
 
         /**
          * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
